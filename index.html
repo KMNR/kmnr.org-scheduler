@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <title>Blank HTML5</title>
+        <title>KMNR :: Show Scheduler</title>
 
         <link rel="stylesheet" href="/lib/fullcalendar.css" />
         <link rel="stylesheet"
@@ -13,11 +13,14 @@
               crossorigin="anonymous">
 
         <style>
+            .nopadding {
+               padding: 0 !important;
+            }
         </style>
 
     </head>
     <body>
-        <p>This is my HTML5 Boilerplate.</p>
+        <h1>Show Scheduler</h1>
 
         <div id='calendar'></div>
 
@@ -62,6 +65,12 @@
                 crossorigin="anonymous"></script>
 
         <script>
+            /**
+             TODO
+                - As the user types a DJ name, have it auto-suggest DJs by a
+                  match in the DJ name or real name.
+             **/
+
             $(document).ready(function() {
 
                 var modal = $('#createShowInTimeslot');
@@ -69,7 +78,7 @@
 
                 // Set the keyboard focus to the DJ Host input
                 modal.on('shown.bs.modal', function () {
-                    $("#show-title").focus();
+                    $("#dj-host").focus();
                 })
 
                 modal.on('hide.bs.modal', function () {
@@ -151,7 +160,28 @@
                         // Prevent duplicate timeslots being added everytime a
                         // new selection is made.
                         $('#modal-save-changes').unbind();
-                    }
+                    },
+
+                    eventRender: function(event, element) {
+                        console.log(element);
+                        element.find(".fc-time").remove();
+                        element.find(".fc-title").remove();
+                        //element.find(".fc-content").addClass("container");
+                        var eventBody = ''
+                            + '<div class="container nopadding"><div class="row nopadding"><div class="col">'
+                            + moment(event.start).format("HH:mm") + '-' + moment(event.end).format("HH:mm")
+                            + '</div>'
+                            + '<div class="col-1">'
+                            + '<button type="button" class="btn btn-danger" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+                            + '</div>'
+                            + '</div>'
+                            + '<div class="row nopadding"><div class="col">'
+                            + '<p class="text-center">'
+                            + (event.title || '')
+                            + '</p>'
+                            + '</div></div></div>';
+                        element.find(".fc-content").append(eventBody);
+                    },
                 })
             });
         </script>
