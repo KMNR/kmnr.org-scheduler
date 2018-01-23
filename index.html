@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Blank HTML5</title>
+
+        <link rel="stylesheet" href="/lib/fullcalendar.css" />
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+        <script src="/lib/fullcalendar.js"></script>
+
+        <style>
+        </style>
+
+        <script>
+            $(document).ready(function() {
+
+                // page is now ready, initialize the calendar...
+
+                $('#calendar').fullCalendar({
+                    // we're only interested in seeing each week with timeslots
+                    defaultView: 'agendaWeek',
+                    // get rid of the all-day slot at the top of each day column
+                    allDaySlot: false,
+                    // don't display the month/day in the column headers; only display the day of the week
+                    columnFormat: 'dddd',
+                    // remove the date range, today button, and next/previous buttons
+                    header: false,
+                    // we don't want today being highlighted, so set the default date way back in the past
+                    defaultDate: '2010-01-01',
+
+                    selectable: true,
+                    selectHelper: true,
+                    select: function(start, end) {
+                        var title = prompt('Show Slot:');
+                        var eventData;
+                        if (title) {
+                            eventData = {
+                                title: title,
+                                start: start,
+                                end: end
+                            };
+                            $('#calendar').fullCalendar('renderEvent',
+                                                        eventData,
+                                                        true); // stick? = true
+                        }
+                        $('#calendar').fullCalendar('unselect');
+                    },
+                    editable: true,
+                })
+            });
+        </script>
+
+    </head>
+    <body>
+        <p>This is my HTML5 Boilerplate.</p>
+
+        <div id='calendar'></div>
+
+
+    </body>
+</html>
