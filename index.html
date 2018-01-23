@@ -62,32 +62,43 @@
                 crossorigin="anonymous"></script>
 
         <script>
-            function newShowSlot(modal, start, end) {
-                var djHost = modal.find("#dj-host").val();
-                var showTitle = modal.find("#show-title").val();
-
-                // If the DJ host has been filled out, render the
-                // show timeslot on the calendar
-                if (djHost) {
-                    var showSlot = {
-                        title: djHost + ": " + showTitle,
-                        start: start,
-                        end: end,
-                        toString: function() {
-                            return this.title + " (" + start.format("h:mmA") + ", " + end.format("h:mmA") + ")";
-                        }
-                    }
-                    $('#calendar').fullCalendar('renderEvent',
-                                                showSlot,
-                                                true); // stick? = true
-                }
-            }
-
             $(document).ready(function() {
 
-                // page is now ready, initialize the calendar...
+                var modal = $('#createShowInTimeslot');
+                var calendar = $('#calendar');
 
-                $('#calendar').fullCalendar({
+                // Set the keyboard focus to the DJ Host input
+                modal.on('shown.bs.modal', function () {
+                    $("#dj-host").focus();
+                })
+
+                modal.on('hide.bs.modal', function () {
+                    calendar.fullCalendar('unselect');
+                })
+
+                function newShowSlot(start, end) {
+                    var djHost = modal.find("#dj-host").val();
+                    var showTitle = modal.find("#show-title").val();
+
+                    // If the DJ host has been filled out, render the
+                    // show timeslot on the calendar
+                    if (djHost) {
+                        var showSlot = {
+                            title: djHost + ": " + showTitle,
+                            start: start,
+                            end: end,
+                            toString: function() {
+                                return this.title + " (" + start.format("h:mmA") + ", " + end.format("h:mmA") + ")";
+                            }
+                        }
+                        calendar.fullCalendar('renderEvent',
+                                              showSlot,
+                                              true); // stick? = true
+                    }
+                }
+
+                // Initialize the calendar
+                calendar.fullCalendar({
                     // we're only interested in seeing each week with timeslots
                     defaultView: 'agendaWeek',
                     // get rid of the all-day slot at the top of each day column
@@ -113,28 +124,16 @@
                     unselectAuto: false,
 
                     select: function(start, end) {
-                        var modal = $('#createShowInTimeslot');
-
                         // Show the modal with the timeslot info as the title
                         modal.on('show.bs.modal', function (event) {
                             modal.find('.modal-title')
                                  .text("Add Show To Timeslot: " + start.format("h:mmA") + " to " + end.format('h:mmA'));
                         });
 
-                        // Set the keyboard focus to the DJ Host input
-                        modal.on('shown.bs.modal', function () {
-                            $("#dj-host").focus();
-                        })
-
-                        modal.on('hide.bs.modal', function () {
-                            $('#calendar').fullCalendar('unselect');
-                        })
-
-
                         // When the "Save changes" button is pressed, create
                         // a timeslot on the calendar
                         $('#modal-save-changes').on('click', function (event) {
-                            newShowSlot(modal, start, end);
+                            newShowSlot(start, end);
 
                             // Hide the modal
                             modal.modal('hide');
@@ -152,8 +151,6 @@
                     }
                 })
             });
-
-
         </script>
     </body>
 </html>
