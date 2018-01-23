@@ -39,7 +39,7 @@
                     </div>
                     <div class="form-group">
                       <label for="show-title" class="col-form-label">Show Title:</label>
-                      <input type="text" class="form-control" id="show-title" placeholder="TBD" value="TBD">
+                      <input type="text" class="form-control" id="show-title">
                     </div>
                   </form>
               </div>
@@ -69,7 +69,7 @@
 
                 // Set the keyboard focus to the DJ Host input
                 modal.on('shown.bs.modal', function () {
-                    $("#dj-host").focus();
+                    $("#show-title").focus();
                 })
 
                 modal.on('hide.bs.modal', function () {
@@ -128,6 +128,9 @@
                         modal.on('show.bs.modal', function (event) {
                             modal.find('.modal-title')
                                  .text("Add Show To Timeslot: " + start.format("h:mmA") + " to " + end.format('h:mmA'));
+                            // Set a default value for the show title
+                            $("#show-title").val("TBD");
+                            $("#dj-host").val("");
                         });
 
                         // When the "Save changes" button is pressed, create
