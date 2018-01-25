@@ -17,6 +17,22 @@
             .nopadding {
                padding: 0 !important;
             }
+
+            .delete-event-button {
+                float:right;
+                display:inline-block;
+                padding:2px 5px;
+                background:#ff6363;
+                border-bottom-left-radius: 5px;     // rounded corner
+            }
+
+            .delete-event-button:hover {
+                float:right;
+                display:inline-block;
+                padding:2px 5px;
+                background:#ff0000;
+                color:#fff;
+            }
         </style>
 
     </head>
@@ -165,27 +181,19 @@
 
                     eventRender: function(event, element) {
                         console.log(element);
-                        element.find(".fc-time").remove();
-                        element.find(".fc-title").remove();
-                        //element.find(".fc-content").addClass("container");
-                        var eventBody = ''
-                            + '<div class="container nopadding"><div class="row nopadding"><div class="col">'
-                            + moment(event.start).format("HH:mm") + '-' + moment(event.end).format("HH:mm")
-                            + '</div>'
-                            + '<div class="col-1">'
-                            + '<button type="button" class="btn btn-danger delete" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-                            + '</div>'
-                            + '</div>'
-                            + '<div class="row nopadding"><div class="col">'
-                            + '<p class="text-center">'
-                            + (event.title || '')
-                            + '</p>'
-                            + '</div></div></div>';
-                        element.find(".fc-content").append(eventBody);
+                        var closeButton = document.createElement("span");
+                        closeButton.classList.add("delete-event-button");
+                        closeButton.appendChild(
+                            document.createTextNode("×")
+                        );
 
-                        element.find(".delete").click(function() {
-                           $('#calendar').fullCalendar('removeEvents',event._id);
-                        });
+                        closeButton.onclick = function() {
+                            $('#calendar').fullCalendar('removeEvents',
+                                                        event._id);
+                        };
+
+                        element.find(".fc-content")
+                               .prepend(closeButton);
                     },
                 })
             });
