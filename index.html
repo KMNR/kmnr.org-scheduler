@@ -126,6 +126,18 @@
                     }
                 }
 
+                function searchKeyPress(e)
+                {
+                    // look for window.event in case event isn't passed in
+                    e = e || window.event;
+                    if (e.keyCode == 13)
+                    {
+                        document.getElementById('modal-save-changes').click();
+                        return false;
+                    }
+                    return true;
+                }
+
                 // Initialize the calendar
                 calendar.fullCalendar({
                     // we're only interested in seeing each week with timeslots
@@ -153,23 +165,11 @@
                     unselectAuto: false,
 
                     select: function(start, end) {
-
-                      function saveShowSlotAndHideModal() {
-                        newShowSlot(start, end);
-                        modal.modal('hide');
-                      }
-
-                      function doKeyDown(e) {
-                        if (e.keyCode == 13) {
-                          saveShowSlotAndHideModal();
-                        }
-                      }
-
                       var djHostBox = document.getElementById("dj-host");
-                      djHostBox.addEventListener( "keydown", doKeyDown, true);
+                      djHostBox.onkeypress = searchKeyPress;
 
                       var showTitleBox = document.getElementById("show-title");
-                      showTitleBox.addEventListener( "keydown", doKeyDown, true);
+                      showTitleBox.onkeypress = searchKeyPress;
 
                         // Show the modal with the timeslot info as the title
                         modal.on('show.bs.modal', function (event) {
@@ -183,7 +183,8 @@
                         // When the "Save changes" button is pressed, create
                         // a timeslot on the calendar
                         $('#modal-save-changes').on('click', function (event) {
-                            saveShowSlotAndHideModal();
+                            newShowSlot(start, end);
+                            modal.modal('hide');
                         })
 
                         // Display the show slot modal
@@ -194,11 +195,7 @@
                     unselect: function(event, view) {
                         // Prevent duplicate timeslots being added everytime a
                         // new selection is made.
-                        console.log("Unselected");
                         $('#modal-save-changes').unbind();
-                        $('#dj-host').unbind('keydown');
-                        $('#show-title').unbind('keydown');
-                        // $(document).unbind("keydown", keyUpFunc);
                     },
 
                     eventRender: function(event, element) {
