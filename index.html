@@ -154,15 +154,15 @@
 
                     select: function(start, end) {
 
-                      function doKeyDown(e) {
-
-                      if (e.keyCode == 13) {
-                      //  alert('Enter key pressed');
+                      function saveShowSlotAndHideModal() {
                         newShowSlot(start, end);
                         modal.modal('hide');
                       }
-                      //alert( e.keyCode ) e.keyCode is the ASCII value
 
+                      function doKeyDown(e) {
+                        if (e.keyCode == 13) {
+                          saveShowSlotAndHideModal();
+                        }
                       }
 
                       var djHostBox = document.getElementById("dj-host");
@@ -183,10 +183,7 @@
                         // When the "Save changes" button is pressed, create
                         // a timeslot on the calendar
                         $('#modal-save-changes').on('click', function (event) {
-                            newShowSlot(start, end);
-
-                            // Hide the modal
-                            modal.modal('hide');
+                            saveShowSlotAndHideModal();
                         })
 
                         // Display the show slot modal
@@ -197,11 +194,14 @@
                     unselect: function(event, view) {
                         // Prevent duplicate timeslots being added everytime a
                         // new selection is made.
+                        console.log("Unselected");
                         $('#modal-save-changes').unbind();
+                        $('#dj-host').unbind('keydown');
+                        $('#show-title').unbind('keydown');
+                        // $(document).unbind("keydown", keyUpFunc);
                     },
 
                     eventRender: function(event, element) {
-                        console.log(element);
                         var closeButton = document.createElement("span");
                         closeButton.classList.add("delete-event-button");
                         closeButton.appendChild(
